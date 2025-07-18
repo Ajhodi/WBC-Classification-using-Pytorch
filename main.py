@@ -6,7 +6,7 @@ Created on Wed Dec  4 11:09:27 2024
 @author: javizara
 """
 import os
-os.chdir("/home/jhodi/Téléchargements/export/WBC Classification using Pytorch/")
+os.chdir("/home/jhodi/bit/Python/WBC Classification using Pytorch/WBC-Classification-using-Pytorch/")
 
 import torch
 import torchvision
@@ -64,13 +64,13 @@ transform_test = transforms.Compose([
 ])
 
 args
-trainset = torchvision.datasets.ImageFolder(root="./data/images/TRAIN", 
+trainset = torchvision.datasets.ImageFolder(root="../data/images/TRAIN", 
                                             transform=transform_train)
 
 trainloader = torch.utils.data.DataLoader(
     trainset, batch_size=batch, shuffle=True, num_workers=2)
 
-testset = torchvision.datasets.ImageFolder(root="./data/images/TEST", 
+testset = torchvision.datasets.ImageFolder(root="../data/images/TEST", 
                                            transform=transform_test)
 
 testloader = torch.utils.data.DataLoader(
@@ -195,16 +195,23 @@ for epoch in (range(_epoch)):
     train(epoch)
     test(epoch)
     scheduler.step()
+
     
-plot_loss_(plot_loss, plot_acc)
-confusion_matrix(["EOSINOPHIL", "LYMPHOCYTE", "MONOCYTE", "NEUTROPHIL"], testloader, net)
-
-# Gradient mask
-
-image_paths = ["./data/images/TRAIN/EOSINOPHIL/_0_651.jpeg",
-              "./data/images/TRAIN/LYMPHOCYTE/_0_204.jpeg",
-              "./data/images/TRAIN/MONOCYTE/_0_180.jpeg",
-              "./data/images/TRAIN/NEUTROPHIL/_0_292.jpeg"
+# save metrics 
+image_paths = ["../data/images/TRAIN/EOSINOPHIL/_0_651.jpeg",
+              "../data/images/TRAIN/LYMPHOCYTE/_0_204.jpeg",
+              "../data/images/TRAIN/MONOCYTE/_0_180.jpeg",
+              "../data/images/TRAIN/NEUTROPHIL/_0_292.jpeg"
               ]
-for ID, image in enumerate(image_paths):
-    importance_scores = integrated_gradients_explanation(image, net, ID)
+n = 1
+output_path = f"./Results/run{n}/"
+while True:
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+        plot_loss_(plot_loss, plot_acc, output_path = output_path)
+        confusion_matrix(classes = ["EOSINOPHIL", "LYMPHOCYTE", "MONOCYTE", "NEUTROPHIL"], 
+                         output_path = output_path, testloader = testloader, net = net)
+        for ID, image in enumerate(image_paths):
+            importance_scores = integrated_gradients_explanation(image_path = image, output_path = output_path, model = net, target_class = ID)
+        break
+    n +=1
