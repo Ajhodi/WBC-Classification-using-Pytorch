@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import seaborn as sn
 import os
 
-def plot_loss_(plot_loss, plot_acc):
+def plot_loss_(plot_loss, plot_acc, output_path):
     plt.figure(figsize=(12, 6))
     
     plt.subplot(1, 2, 1)
@@ -31,18 +31,19 @@ def plot_loss_(plot_loss, plot_acc):
     plt.ylabel("accuracy")
     
     # Trouver un nom de fichier qui n'existe pas encore...
-    n = 0
-    while True:
-        filename = f'./Results/loss{n}.png'
-        if not os.path.exists(filename):
-            plt.savefig(filename) # Pour ensuite attribuer son nom à la figure
-            break
-        n += 1
+    plt.savefig(f'{output_path}/loss.png')
+    # n = 0
+    # while True:
+    #     filename = f'./Results/loss{n}.png'
+    #     if not os.path.exists(filename):
+    #         plt.savefig(filename) # Pour ensuite attribuer son nom à la figure
+    #         break
+    #     n += 1
     plt.tight_layout()
     plt.show()
     plt.subplot(1, 1, 1)
 
-def confusion_matrix(classes, testloader, net):
+def confusion_matrix(classes, testloader, net, output_path):
     correct_pred = {classname: 0 for classname in classes}
     total_pred = {classname: 0 for classname in classes}
 
@@ -88,14 +89,17 @@ def confusion_matrix(classes, testloader, net):
     plt.ylabel ("Labels") 
     
     # Save file 
+    
     prt = pd.DataFrame(prt)
-    n = 0 
-    while True:
-        if not os.path.exists(f"./Results/Precision{n}.csv"):
-            prt.to_csv(f"./Results/Precision{n}.csv")
-            plt.savefig(f"./Results/Matrix{n}")
-            break
-        n += 1
+    prt.to_csv(f"{output_path}/Precision.csv")
+    plt.savefig(f"{output_path}/Matrix")
+    # n = 0 
+    # while True:
+    #     if not os.path.exists(f"{output_path}/Precision{n}.csv"):
+    #         prt.to_csv(f"{output_path}/Precision{n}.csv")
+    #         plt.savefig(f"{output_path}/Matrix{n}")
+    #         break
+    #     n += 1
     plt.show() 
             
 

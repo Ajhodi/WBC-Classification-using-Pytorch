@@ -29,7 +29,8 @@ def load_and_preprocess_image(image_path):
     return image
 
 # Fonction principale pour Integrated Gradients
-def integrated_gradients_explanation(image_path, model=None, target_class=0):
+def integrated_gradients_explanation(image_path, output_path, 
+                                     model=None, target_class=0):
     image = load_and_preprocess_image(image_path)
     
     # Créer un objet Integrated Gradients
@@ -66,8 +67,8 @@ def integrated_gradients_explanation(image_path, model=None, target_class=0):
 
     n = 0
     while True:
-        if not os.path.exists(f"Integrated_Gradients_Mask{n}.png"):
-            plt.savefig(f"Integrated_Gradients_Mask{n}.png")
+        if not os.path.exists(f"./{output_path}/Integrated_Gradients_Mask{n}.png"):
+            plt.savefig(f"./{output_path}/Integrated_Gradients_Mask{n}.png")
             break
         n += 1
     plt.tight_layout()
